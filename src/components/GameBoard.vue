@@ -3,27 +3,37 @@
     <!-- Start Button -->
     <div
       @click="setUpGame"
-      class="flex justify-center items-center rounded-lg w-[150px] h-[60px] border-[2px] border-teal-500 bg-transparent text-teal-500 text-2xl font-bold cursor-pointer"
+      class="flex justify-center items-center rounded-lg w-[150px] h-[60px] border-[2px] border-teal-500 bg-transparent text-teal-500 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-teal-500 hover:text-slate-900"
     >
-      Start
+      {{ computedButtonTitle }}
     </div>
     <div>Level : {{ level }}</div>
     <!-- Game Buttons -->
     <div class="flex flex-col items-center mt-10">
-      <div class="w-full h-[150px]">
+      <div class="w-full h-[250px]">
         <div
           v-if="isGameOver"
-          class="flex justify-center items-center h-[100px] rounded-lg my-4 bg-red-300 text-red-500 text-2xl font-bold"
+          class="flex flex-col justify-center items-center h-[200px] rounded-lg my-4 bg-red-300 text-red-500 text-2xl font-bold"
         >
           GAME OVER !
-          <br />
-          Restart ?
+          <div
+            @click="setUpGame"
+            class="flex justify-center items-center mt-6 rounded-lg w-[150px] h-[60px] border-[2px] border-red-500 bg-red-500 text-red-200 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-red-700 hover:border-red-700"
+          >
+            Restart
+          </div>
         </div>
         <div
-          v-show="isGameSuccess === true"
-          class="flex justify-center items-center h-[100px] rounded-lg my-4 bg-teal-300 text-slate-900 text-2xl font-bold"
+          v-if="isGameSuccess === true"
+          class="flex flex-col justify-center items-center h-[200px] rounded-lg my-4 bg-teal-300 text-slate-900 text-2xl font-bold"
         >
-          Level Success !
+          Level Succeed !
+          <div
+            @click="setUpGame"
+            class="flex justify-center items-center mt-6 rounded-lg w-[150px] h-[60px] border-[2px] border-teal-300 bg-slate-900 text-teal-300 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-slate-800"
+          >
+            Continue
+          </div>
         </div>
       </div>
       <div class="flex justify-center">
@@ -33,14 +43,14 @@
           :class="`${button.color} ${button.class} ${
             isButtonClickable ? 'cursor-pointer' : ''
           }`"
-          class="mx-4 rounded-[50px] w-[30px] h-[30px] opacity-40 hover:opacity-80 active:opacity-100"
+          class="mx-4 rounded-[50px] w-[50px] h-[50px] opacity-40 hover:opacity-100 active:opacity-100"
         ></div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 const buttons = ref([
   { color: "bg-amber-500" },
   { color: "bg-teal-500" },
@@ -58,6 +68,13 @@ const userPattern = ref([]);
 const isButtonClickable = ref(false);
 const isGameOver = ref(false);
 const isGameSuccess = ref(false);
+const computedButtonTitle = computed(() => {
+  if (level.value > 1) {
+    return "Continue";
+  } else {
+    return "Start";
+  }
+});
 
 function setUpGame() {
   levelPattern.value = [];
@@ -65,7 +82,6 @@ function setUpGame() {
   isGameOver.value = false;
   isGameSuccess.value = false;
   isButtonClickable.value = false;
-  //level.value++;
   getPattern();
   launchGame();
 }
@@ -77,7 +93,6 @@ function getPattern() {
     pattern[index] = Math.floor(Math.random() * 8);
   });
   levelPattern.value = pattern;
-  isButtonClickable.value = true;
 }
 
 function launchGame() {
@@ -87,7 +102,10 @@ function launchGame() {
   const myInterval = setInterval(() => {
     index = levelPattern.value[count];
     buttons.value[index].class = "opacity-100";
-    if (count >= length) clearInterval(myInterval);
+    if (count >= length) {
+      clearInterval(myInterval);
+      isButtonClickable.value = true;
+    }
     setTimeout(() => {
       buttons.value[index].class = "opacity-40";
     }, 500);
