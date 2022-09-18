@@ -5,12 +5,17 @@
   </div>
   <div class="flex justify-center">
     <span
-      class="btn-secondary"
+      class="btn-primary w-[250px] mx-4"
       @click="$router.push({ name: 'memory-simon-says' })"
     >
       Simon Says
     </span>
-    <span class="btn-secondary"> Number Memory </span>
+    <span
+      class="btn-primary w-[250px] mx-4"
+      @click="$router.push({ name: 'memory-numbers' })"
+    >
+      Numbers Memory
+    </span>
   </div>
 </template>
 <script setup>

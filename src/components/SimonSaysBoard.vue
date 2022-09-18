@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center w-full">
     <div
       v-for="(button, i) in buttons"
       @click="$emit('onButtonClick', i)"
