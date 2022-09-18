@@ -1,4 +1,5 @@
 <template>
+  <TheHeader></TheHeader>
   <div class="flex flex-col items-center mt-10">
     <div class="text-3xl font-bold text-purple-300">Level : {{ level }}</div>
     <div class="text-3xl font-bold text-purple-300">
@@ -26,36 +27,21 @@
       </div>
       <!-- Game Status -->
       <div class="w-full h-[250px] mt-5">
-        <div
-          v-if="isGameOver === true"
-          class="flex flex-col justify-center items-center h-[200px] rounded-lg my-4 bg-red-300 text-red-500 text-2xl font-bold"
-        >
-          GAME OVER !
-          <div
-            @click="setUpGame"
-            class="flex justify-center items-center mt-6 rounded-lg w-[150px] h-[60px] border-[2px] border-red-500 bg-red-500 text-red-200 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-red-700 hover:border-red-700"
-          >
-            Restart
-          </div>
-        </div>
-        <div
+        <GameStatusOver v-if="isGameOver === true" @onButtonClick="setUpGame" />
+        <GameStatusSuccess
           v-if="isGameSuccess === true"
-          class="flex flex-col justify-center items-center h-[200px] rounded-lg my-4 bg-teal-300 text-slate-900 text-2xl font-bold"
-        >
-          Level Succeed !
-          <div
-            @click="setUpGame"
-            class="flex justify-center items-center mt-6 rounded-lg w-[150px] h-[60px] border-[2px] border-teal-300 bg-slate-900 text-teal-300 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-slate-800"
-          >
-            Continue
-          </div>
-        </div>
+          @onButtonClick="setUpGame"
+        />
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import GameStatusSuccess from "./GameStatusSuccess.vue";
+import GameStatusOver from "./GameStatusOver.vue";
+import TheHeader from "./TheHeader.vue";
+
 const buttons = ref([
   { color: "bg-amber-500" },
   { color: "bg-teal-500" },
