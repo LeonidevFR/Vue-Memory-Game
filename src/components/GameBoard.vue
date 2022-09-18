@@ -1,18 +1,33 @@
 <template>
-  <div class="flex flex-col items-center mt-20">
+  <div class="flex flex-col items-center mt-10">
+    <div class="text-3xl font-bold text-purple-300">Level : {{ level }}</div>
+    <div class="text-3xl font-bold text-purple-300">
+      Best Score : {{ userBestScore }}
+    </div>
     <!-- Start Button -->
     <div
+      v-if="level === 1 && isGameOver === false"
       @click="setUpGame"
       class="flex justify-center items-center rounded-lg w-[150px] h-[60px] border-[2px] border-teal-500 bg-transparent text-teal-500 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-teal-500 hover:text-slate-900"
     >
       {{ computedButtonTitle }}
     </div>
-    <div>Level : {{ level }}</div>
-    <!-- Game Buttons -->
     <div class="flex flex-col items-center mt-10">
-      <div class="w-full h-[250px]">
+      <!-- Game Buttons -->
+      <div class="flex justify-center">
         <div
-          v-if="isGameOver"
+          @click="onButtonClick(i)"
+          v-for="(button, i) in buttons"
+          :class="`${button.color} ${button.class} ${
+            isButtonClickable ? 'cursor-pointer' : ''
+          }`"
+          class="mx-4 rounded-[50px] w-[50px] h-[50px] opacity-40 hover:opacity-80 active:opacity-100"
+        ></div>
+      </div>
+      <!-- Game Status -->
+      <div class="w-full h-[250px] mt-5">
+        <div
+          v-if="isGameOver === true"
           class="flex flex-col justify-center items-center h-[200px] rounded-lg my-4 bg-red-300 text-red-500 text-2xl font-bold"
         >
           GAME OVER !
@@ -36,21 +51,11 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-center">
-        <div
-          @click="onButtonClick(i)"
-          v-for="(button, i) in buttons"
-          :class="`${button.color} ${button.class} ${
-            isButtonClickable ? 'cursor-pointer' : ''
-          }`"
-          class="mx-4 rounded-[50px] w-[50px] h-[50px] opacity-40 hover:opacity-100 active:opacity-100"
-        ></div>
-      </div>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 const buttons = ref([
   { color: "bg-amber-500" },
   { color: "bg-teal-500" },
@@ -63,6 +68,7 @@ const buttons = ref([
 ]);
 
 const level = ref(1);
+const userBestScore = ref(0);
 const levelPattern = ref([]);
 const userPattern = ref([]);
 const isButtonClickable = ref(false);
@@ -74,6 +80,10 @@ const computedButtonTitle = computed(() => {
   } else {
     return "Start";
   }
+});
+
+onMounted(() => {
+  setBestScore();
 });
 
 function setUpGame() {
@@ -113,21 +123,40 @@ function launchGame() {
   }, 1000);
 }
 
+function setBestScore() {
+  let currentScore = level.value;
+  let bestScore = localStorage.getItem("bestScore");
+  userBestScore.value = localStorage.getItem("bestScore");
+
+  if (!bestScore) {
+    localStorage.setItem("bestScore", currentScore);
+    userBestScore.value = currentScore;
+  }
+
+  if (currentScore > bestScore) {
+    localStorage.setItem("bestScore", currentScore);
+    userBestScore.value = currentScore;
+  }
+}
+
 function onButtonClick(index) {
   let levelPatternLength = levelPattern.value.length - 1;
   let userPatternLength = userPattern.value.length;
 
-  if (isButtonClickable.value === true && !!isGameOver) {
-    if (userPatternLength <= levelPatternLength) {
-      if (levelPattern.value[userPatternLength] === index) {
-        userPattern.value.push(index);
-      } else {
-        onGameOver();
+  if (!isGameOver.value === true && !isGameSuccess.value === true) {
+    if (isButtonClickable.value === true && !!isGameOver) {
+      if (userPatternLength <= levelPatternLength) {
+        if (levelPattern.value[userPatternLength] === index) {
+          userPattern.value.push(index);
+        } else {
+          onGameOver();
+          return;
+        }
       }
-    }
 
-    if (userPatternLength === levelPatternLength) {
-      onLevelSuccess();
+      if (userPatternLength === levelPatternLength) {
+        onLevelSuccess();
+      }
     }
   }
 }
@@ -135,6 +164,7 @@ function onButtonClick(index) {
 function onLevelSuccess() {
   isGameSuccess.value = true;
   level.value++;
+  setBestScore();
 }
 
 function onGameOver() {
