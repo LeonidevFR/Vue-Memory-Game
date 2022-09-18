@@ -1,13 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../App.vue";
+import ChooseGame from "../views/ChooseGame.vue";
+import GameBoard from "../components/GameBoard.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home,
+      name: "Home",
+      component: ChooseGame,
+    },
+    {
+      path: "/memory/simon_says",
+      name: "memory-simon-says",
+      component: GameBoard,
     },
   ],
 });

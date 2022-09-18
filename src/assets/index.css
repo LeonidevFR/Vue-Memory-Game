@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-secondary {
-    @apply flex justify-center items-center cursor-pointer mx-3 w-[200px] h-[50px] text-xl font-bold border-[2px] rounded-lg border-teal-200 text-teal-200 hover:bg-teal-200 hover:text-slate-900;
+  .btn-primary {
+    @apply flex justify-center items-center rounded-lg h-[60px] border-[2px] border-teal-500 bg-transparent text-teal-500 text-2xl font-bold cursor-pointer transition ease-in-out duration-75 hover:bg-teal-500 hover:text-slate-900 active:bg-teal-400 active:border-teal-400;
   }
 }
