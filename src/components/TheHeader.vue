@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-auto bg-slate-900 grid grid-cols-[1fr_2fr] items-center py-4"
+    class="w-full h-auto bg-slate-900 grid grid-cols-[1fr_2fr] items-center py-4 border-b-2 border-teal-500 border-opacity-30"
   >
     <Home
       @click="$router.push('/')"

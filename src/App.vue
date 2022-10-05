@@ -1,11 +1,7 @@
-<script setup>
-import TheHeader from "./components/TheHeader.vue";
-import GameBoard from "./components/GameBoard.vue";
-</script>
+<script setup></script>
 
 <template>
-  <TheHeader />
-  <GameBoard></GameBoard>
+  <router-view />
 </template>
 
 <style scoped></style>
