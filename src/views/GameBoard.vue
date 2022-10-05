@@ -9,7 +9,7 @@
     <div
       v-if="level === 1 && isGameOver === false"
       @click="setUpGame"
-      class="btn-primary w-[150px]"
+      class="btn-primary w-[150px] mt-8"
     >
       Start
     </div>
