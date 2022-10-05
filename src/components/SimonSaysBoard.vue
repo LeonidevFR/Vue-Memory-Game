@@ -11,8 +11,6 @@
   </div>
 </template>
 <script setup>
-import { defineProps } from "vue";
-
 defineProps({
   buttons: Array,
   isButtonClickable: Boolean,
